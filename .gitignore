@@ -1,0 +1,57 @@
+# Gradle files
+.gradle/
+build/
+**/build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio project files
+/.idea/
+/.idea/workspace.xml
+/.idea/libraries
+/.idea/modules.xml
+/.idea/*.iml
+/.idea/vcs.xml
+*.iws
+*.iml
+*.ipr
+
+# Keystore files
+*.jks
+*.keystore
+
+# Gradle Wrapper files
+/gradle/wrapper/gradle-wrapper.properties
+/gradle/wrapper/gradle-wrapper.jar
+
+# Android release/packaging files
+*.apk
+*.ap_
+*.aab
+
+# Proguard files
+proguard/
+proguard-rules.pro
+
+# NDK
+/.cxx/
+
+# IntelliJ IDEA
+/out/
+
+# Temporary files
+/tmp
+*.temp
+*.tmp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Generated files
+generated/
+.idea/caches/
