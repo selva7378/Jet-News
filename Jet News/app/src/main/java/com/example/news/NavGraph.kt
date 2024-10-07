@@ -1,5 +1,11 @@
 package com.example.news
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,50 +25,93 @@ import com.example.news.viewmodel.NewsViewModel
 
 val ROUTE_USER_DETAILS = "user_details?Data={user}"
 
+//@Composable
+//fun NewsApp(
+//    newsViewModel: NewsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+//    navController: NavHostController = rememberNavController(),
+//    modifier: Modifier = Modifier
+//) {
+//    NavHost(
+//        navController = navController,
+//        startDestination = NewsSreen.NEWS_SCREEN.name,
+//        modifier = modifier
+//    ) {
+//
+//        composable(
+//            route = NewsSreen.NEWS_SCREEN.name
+//        ) {
+//            HomeScreen(
+//                navController = navController,
+//                newsViewModel = newsViewModel,
+//                retryAction = {
+//                    newsViewModel.getNewsFromApi()
+//                    newsViewModel.getAllNews()
+//                }
+//            )
+//        }
+//
+//        composable(
+//            route = "${NewsSreen.WEBVIEW_SCREEN.name}/{url}",
+//            arguments = listOf(navArgument(name = "url") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val url = backStackEntry.arguments?.getString("url")
+//            WebViewScreen(
+//                url = url ?: "",
+//                modifier = modifier
+//            )
+//        }
+//
+//    }
+//
+//}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun NewsApp(
+fun NewsAppContent(
     newsViewModel: NewsViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = NewsSreen.NEWS_SCREEN.name,
-        modifier = modifier
-    ) {
+    val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
 
-        composable(
-            route = NewsSreen.NEWS_SCREEN.name
-        ) {
-            HomeScreen(
-                navController = navController,
-                newsViewModel = newsViewModel,
-                retryAction = {
-                    newsViewModel.getNewsFromApi()
-                    newsViewModel.getAllNews()
-                }
-            )
-        }
-
-        composable(
-            route = "${NewsSreen.WEBVIEW_SCREEN.name}/{url}",
-            arguments = listOf(navArgument(name = "url") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val url = backStackEntry.arguments?.getString("url")
-            WebViewScreen(
-                url = url ?: "",
-                modifier = modifier
-            )
-        }
-
+    BackHandler(navigator.canNavigateBack()) {
+        navigator.navigateBack()
     }
 
+    ListDetailPaneScaffold(
+        modifier = modifier,
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
+        listPane = {
+            AnimatedPane {
+                HomeScreen(
+                    navController = navController,
+                    newsViewModel = newsViewModel,
+                    retryAction = {
+                        newsViewModel.getNewsFromApi()
+                        newsViewModel.getAllNews()
+                    },
+                    onNewsClick = {
+                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                    }
+                )
+            }
+        },
+        detailPane = {
+            AnimatedPane {
+                WebViewScreen(
+                    modifier = Modifier
+                )
+            }
+        }
+    )
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun NewsAppPreview() {
     NewsTheme {
-        NewsApp()
+        NewsAppContent()
     }
 }

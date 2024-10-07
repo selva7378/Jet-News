@@ -8,7 +8,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 
 @Composable
-fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
+fun WebViewScreen(modifier: Modifier = Modifier) {
+    val url: String = ""
     AndroidView(
         factory = { context ->
             WebView(context).apply {

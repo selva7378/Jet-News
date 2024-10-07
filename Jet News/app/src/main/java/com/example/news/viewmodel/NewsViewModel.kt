@@ -34,6 +34,9 @@ class NewsViewModel(
     private val newsDbRepository: NewsDbRepository
 ) : ViewModel() {
 
+    private val _currUrl: MutableStateFlow<String> = MutableStateFlow("")
+    val currUrl: StateFlow<String> = _currUrl
+
     var newsUiState: NewsUiState by mutableStateOf(NewsUiState.Loading)
         private set
 

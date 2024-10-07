@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                        NewsApp(
+                        NewsAppContent(
                             modifier = Modifier.padding(innerPadding)
                         )
                 }

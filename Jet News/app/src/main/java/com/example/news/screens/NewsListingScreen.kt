@@ -1,6 +1,7 @@
 package com.example.news.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -66,15 +67,17 @@ enum class NewsSreen {
 
 @Composable
 fun HomeScreen(
+    onNewsClick: () -> Unit,
     navController: NavController,
     newsViewModel: NewsViewModel,
     retryAction: () -> Unit,
+
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     when (newsViewModel.newsUiState) {
         is NewsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is NewsUiState.Success -> NewsScreen(navController, newsViewModel, modifier)
+        is NewsUiState.Success -> NewsScreen(onNewsClick,navController, newsViewModel, modifier)
         is NewsUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
@@ -108,6 +111,7 @@ fun ErrorScreen(retryAction: () -> Unit,modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsScreen(
+    onNewsClick: () -> Unit,
     navController: NavController,
     newsViewModel: NewsViewModel,
     modifier: Modifier = Modifier
@@ -123,9 +127,9 @@ fun NewsScreen(
         newsViewModel.getNewsByCategory(category)
     }
 
-    val onClickWebView: (String) -> Unit = { url ->
-        navController.navigate("${NewsSreen.WEBVIEW_SCREEN.name}/$url")
-    }
+//    val onClickWebView: (String) -> Unit = { url ->
+//        navController.navigate("${NewsSreen.WEBVIEW_SCREEN.name}/$url")
+//    }
     Column(modifier = modifier.fillMaxSize()) {
 
 
@@ -177,8 +181,8 @@ fun NewsScreen(
         )
 
         NewsList(
+            onNewsClick = onNewsClick,
             newsList = allNewsList.value,
-            onClickWebView = onClickWebView
         )
     }
 }
@@ -198,8 +202,8 @@ fun CatagoryList(
 
 @Composable
 fun NewsList(
+    onNewsClick: () -> Unit,
     newsList: List<News>,
-    onClickWebView: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -209,7 +213,7 @@ fun NewsList(
             NewsCard(
                 photoUrl = news.imageUrl,
                 webViewUrl = news.readMoreUrl,
-                onClickWebView = onClickWebView,
+                onNewsClick = onNewsClick,
                 newsTitle = news.title
             )
         }
@@ -242,11 +246,15 @@ fun NewsCard(
     photoUrl: String,
     newsTitle: String,
     webViewUrl: String,
-    onClickWebView: (String) -> Unit,
+    onNewsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable {
+                onNewsClick()
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
 
@@ -268,27 +276,10 @@ fun NewsCard(
                 text = newsTitle,
                 modifier = Modifier.padding(4.dp)
             )
-            Row {
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = {
-                        val encodedUrl =
-                            URLEncoder.encode(webViewUrl, StandardCharsets.UTF_8.toString())
-                        onClickWebView(encodedUrl)
-                    },
-                    modifier = Modifier
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.DoubleArrow,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                }
-            }
-
         }
 
     }
+
 }
 
 @Preview
