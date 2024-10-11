@@ -59,6 +59,10 @@ class NewsViewModel(
         }
     }
 
+    fun updateCurrUrl(webViewUrl: String){
+        _currUrl.value = webViewUrl
+    }
+
     private suspend fun initializeData() {
         Log.i("ViewModel", "initializedDataexecuted")
         setDbSize()

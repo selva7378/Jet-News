@@ -36,15 +36,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             NewsTheme {
                 Scaffold(
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = {},
-                            shape = MaterialTheme.shapes.medium,
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-
-                        }
-                    },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                         NewsAppContent(

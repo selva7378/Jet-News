@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.news.LocalNewsViewModel
 import com.example.news.R
 import com.example.news.roomdb.News
 import com.example.news.ui.theme.NewsTheme
@@ -69,15 +70,15 @@ enum class NewsSreen {
 fun HomeScreen(
     onNewsClick: () -> Unit,
     navController: NavController,
-    newsViewModel: NewsViewModel,
     retryAction: () -> Unit,
 
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
+    val newsViewModel = LocalNewsViewModel.current
     when (newsViewModel.newsUiState) {
         is NewsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is NewsUiState.Success -> NewsScreen(onNewsClick,navController, newsViewModel, modifier)
+        is NewsUiState.Success -> NewsScreen(onNewsClick,navController,modifier)
         is NewsUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
@@ -113,9 +114,9 @@ fun ErrorScreen(retryAction: () -> Unit,modifier: Modifier = Modifier) {
 fun NewsScreen(
     onNewsClick: () -> Unit,
     navController: NavController,
-    newsViewModel: NewsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val newsViewModel = LocalNewsViewModel.current
     var allNewsList = newsViewModel.allNewsList.collectAsState()
     var searchValue by rememberSaveable {
         mutableStateOf("")
@@ -249,11 +250,13 @@ fun NewsCard(
     onNewsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val newsViewModel = LocalNewsViewModel.current
     Card(
         modifier = Modifier
             .padding(16.dp)
             .clickable {
                 onNewsClick()
+                newsViewModel.updateCurrUrl(webViewUrl)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
