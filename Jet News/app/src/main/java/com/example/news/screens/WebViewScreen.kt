@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.getValue
-import com.example.news.LocalNewsViewModel
+import com.example.news.navgraph.LocalNewsViewModel
 
 
 @Composable
