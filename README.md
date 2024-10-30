@@ -34,7 +34,7 @@ Build the project and run it on your Android device/emulator.
 - View articles by category.
 - Read full articles in a clean, distraction-free interface.
 # Screenshots :
-(Include relevant screenshots of the app here)
+
 
 # Contribution :
 Feel free to submit issues or pull requests if you find any bugs or want to improve the codebase.
